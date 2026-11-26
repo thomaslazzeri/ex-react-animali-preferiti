@@ -28,7 +28,6 @@
 
     <script type="text/babel">
         const { useState } = React;
-        const animalsChoices = ["Cane", "Gatto", "Pappagallo", "Cavallo", "Panda"];
 
         function Modal({
             title,
@@ -55,17 +54,38 @@
         const ListaAnimali = () => {
             const [animals, setAnimals] = useState([]);
             const [showModal, setShowModal] = useState(false);
-            const [newAnimal, setNewAnimal] =useState("");
-            
-            const addRandomAnimal = () => {
-                const randomIndex = Math.floor(Math.random() * animalsChoices.length);
-                const randomAnimal = animalsChoices[randomIndex];
-                setAnimals([...animals, randomAnimal]);
+            const [newAnimal, setNewAnimal] = useState("");
+
+            const closeModal = () => {
+                setShowModal(false);
+                setNewAnimal("");
+            };
+
+            const confirmAnimal = () => {
+                const name = newAnimal.trim();
+                if (name === "") return;
+                setAnimals([...animals, name]);
+                closeModal();
             };
 
             return (
                 <>
-                    <button onClick={addRandomAnimal}>Aggiungi Animale</button>
+                    <button onClick={() => setShowModal(true)}>Aggiungi Animale</button>
+                    <Modal
+                        title="Aggiungi un animale"
+                        content={
+                            <input
+                                type="text"
+                                placeholder="Nome dell'animale"
+                                value={newAnimal}
+                                onChange={e => setNewAnimal(e.target.value)}
+                            />
+                        }
+                        show={showModal}
+                        onClose={closeModal}
+                        onConfirm={confirmAnimal}
+                    />
+
                     <details>
                         <summary>Animali</summary>
                         <ul>
